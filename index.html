@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8" />
+
+<style id="webmakerstyle">
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+abbr, address, cite, code,
+del, dfn, em, img, ins, kbd, q, samp,
+small, strong, sub, sup, var,
+b, i,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent; }
+
+body {
+  line-height: 1; }
+
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+nav ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none; }
+
+a {
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent; }
+
+/* change colours to suit your needs */
+ins {
+  background-color: #ff9;
+  color: #000;
+  text-decoration: none; }
+
+/* change colours to suit your needs */
+mark {
+  background-color: #ff9;
+  color: #000;
+  font-style: italic;
+  font-weight: bold; }
+
+del {
+  text-decoration: line-through; }
+
+abbr[title], dfn[title] {
+  border-bottom: 1px dotted;
+  cursor: help; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+/* change border colour to suit your needs */
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #cccccc;
+  margin: 1em 0;
+  padding: 0; }
+
+input, select {
+  vertical-align: middle; }
+
+.game-c {
+  background-color: skyblue;
+  width: 500px; }
+  .game-c .message {
+    text-align: center; }
+    .game-c .message h1 {
+      margin: 0 20px 20px 20px; }
+    .game-c .message .act .Result {
+      margin: 10px 0; }
+    .game-c .message .act .Wins {
+      margin: 10px 0; }
+    .game-c .message .act .Reset {
+      position: absolute;
+      top: 24px;
+      left: 24px; }
+  .game-c .enemy {
+    display: flex;
+    justify-content: center; }
+    .game-c .enemy img {
+      height: 100px;
+      width: 100px;
+      margin: 20px 20px; }
+  .game-c .myhand {
+    display: flex;
+    justify-content: center; }
+    .game-c .myhand img {
+      height: 100px;
+      width: 100px;
+      margin: 20px 20px; }
+
+</style>
+</head>
+<body>
+<div class = "game-c">
+  <div class= "message">
+    <h1>jan-ken game</h1>
+    <div class ="act">
+      <p id = "result" class= "Result">結果</p>
+      <p id = "wins" class="Wins">連勝数</p>
+      <p id = "reset" class="Reset">リセット</p>
+    </div>
+  </div>
+  <div id ="start" class= "enemy">
+    <img id = "enhand" src="file:///Users/nagatakaito/Desktop/image/start.png">
+  </div>
+  <div class = "myhand">
+    <img id ="gu" src="file:///Users/nagatakaito/Desktop/image/gu.png">
+    <img id="choki" src="file:///Users/nagatakaito/Desktop/image/choki.png">
+    <img id="pa" src="file:///Users/nagatakaito/Desktop/image/pa.png">
+  </div>
+</div>
+
+<script>
+const Gu = "file:///Users/nagatakaito/Desktop/image/gu.png"
+const Cho ="file:///Users/nagatakaito/Desktop/image/choki.png"
+const Pa ="file:///Users/nagatakaito/Desktop/image/pa.png"
+const start = "file:///Users/nagatakaito/Desktop/image/start.png";
+var hand = [Gu,Cho,Pa]
+var janken = document.getElementById("start");
+var g = document.getElementById("gu");
+var cho = document.getElementById("choki");
+var p = document.getElementById("pa");
+var res = document.getElementById("reset");
+var flag = 0; /*2 ０で開始、１で手を出せる、２でリセットする必要がある*/
+/*1本当はランダム変数を外に出したかった*/
+var counter = 0;/*3 連勝数のカウンター*/
+
+const test = function(){
+  console.log("test");
+}
+
+const timeOut = function(){
+  flag = 2;
+  alert("時間切れです・・・\n" +counter+ "連勝でした！");
+  document.getElementById("result").innerText ="時間切れです・・・";
+  document.getElementById("wins").innerText = "リセットを押してください";
+}
+
+const enemyHand = function() {
+  if(flag === 0){/*2 flagの追加*/
+   var random = Math.floor(Math.random() * 3);
+   document.getElementById("enhand").src = hand[random];
+   flag = 1; /*２　フラグの変更*/
+  }else{
+    console.log("リセットを押して");
+  }
+};
+
+/*1テキストを入れ替えるだけ*/
+const Kati = function(){
+  document.getElementById("result").innerText ="勝ちました！";
+  counter ++;
+  document.getElementById("wins").innerText = counter + "連勝です！";
+  enemyHand(); /*3 勝ったのでもう一度手を出す*/
+}
+
+const Make = function(){
+  document.getElementById("result").innerText ="負けちゃいました・・・";
+  document.getElementById("wins").innerText = "リセットを押してください";
+  alert(counter + "連勝でした！");
+}
+
+const Aiko = function(){
+  document.getElementById("result").innerText ="あいこです";
+  enemyHand();
+}
+
+/*1 onclickがよくわからなかった。本当は引数も使いたかったけど無理だった*/
+janken.addEventListener("click" ,function(){
+  enemyHand();
+},false);
+
+g.addEventListener("click",function(){
+  if(flag === 1){
+    if(document.getElementById("enhand").src === Gu){
+      flag = 0;/*３　次の手を出すためにフラグを０に*/
+      Aiko();
+    }else if(document.getElementById("enhand").src === Cho){
+      flag = 0;/*３　次の手を出すためにフラグを０に*/
+      Kati();
+    }else if(document.getElementById("enhand").src === Pa){
+      flag = 2;/*負けたのでフラグを２に*/
+      Make();
+    } /*２　フラグの変更*/
+  }else if(flag === 0){
+    console.log("すたーとを押してください");
+  }else if(flag === 2){
+    console.log("リセットを押してください");
+  }
+},false);
+
+cho.addEventListener("click",function(){
+  if(flag === 1){
+    if(document.getElementById("enhand").src === Gu){
+      flag = 2;/*負けたのでフラグを２に*/
+      Make();
+    }else if(document.getElementById("enhand").src === Cho){
+      flag = 0;/*３　次の手を出すためにフラグを０に*/
+      Aiko();
+    }else if(document.getElementById("enhand").src === Pa){
+      flag = 0;/*３　次の手を出すためにフラグを０に*/
+      Kati();
+    }/*２　フラグの変更*/
+  }else if(flag === 0){
+    console.log("すたーとを押してください");
+  }else if(flag === 2){
+    console.log("リセットを押してください");
+  }
+},false);
+
+p.addEventListener("click",function(){
+  if(flag === 1){
+    if(document.getElementById("enhand").src === Gu){
+      flag = 0;/*３　次の手を出すためにフラグを０に*/
+      Kati();
+    }else if(document.getElementById("enhand").src === Cho){
+      flag = 2;/*負けたのでフラグを２に*/
+      Make();
+    }else if(document.getElementById("enhand").src === Pa){
+      flag = 0;/*３　次の手を出すためにフラグを０に*/
+      Aiko();
+    } /*２　フラグの変更*/
+  }else if(flag === 0){
+    console.log("すたーとを押してください");
+  }else if(flag === 2){
+    console.log("リセットを押してください");
+  }
+},false);
+
+/*2 リセット関数 フラグが２の時リセットする*/
+res.addEventListener("click",function(){
+  document.getElementById("enhand").src = start;
+  flag = 0;
+  counter = 0;
+  document.getElementById("result").innerText ="結果";
+  document.getElementById("wins").innerText = "連勝数";
+},false)
+//# sourceURL=userscript.js
+</script>
+</body>
+</html>
